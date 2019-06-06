@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script>
+        function LoadFromCRM() {
+            var val = parent.Xrm.Page.getAttribute("name").getValue();
+            document.getElementById("txt1").value = val;
+        }
+
+        function LoadFromServer() {
+            var data = '';
+            parent.Xrm.WebApi.retrieveMultipleRecords("account", "?$select=name&$top=1").then(
+                function success(result) {
+                    document.getElementById("txt2").value = result.entities[0].name;
+                    for (var i = 0; i < result.entities.length; i++) {
+                        data = data + ' ' + result.entities[i].name;
+                    }
+                    // perform additional operations on retrieved records
+                },
+                function (error) {
+                    console.log(error.message);
+                    // handle error conditions
+                }
+            );
+            
+        }
+    </script>
+
+</head>
+<body>
+    Name : <input type="text" id="txt1" /><br/>
+    <input type="button" value="Load from Page" onclick="LoadFromCRM()"/><br/><br /><br />
+    Name : <input type="text" id="txt2" /><br />
+    <input type="button" value="Load from CRM Server"  onclick="LoadFromServer()"/><br/>
+
+</body>
+</html>
